@@ -2,7 +2,6 @@ import sys
 from fastapi import FastAPI
 from dotenv import load_dotenv
 from pathlib import Path
-from api.router import api_router
 from fastapi import FastAPI
 from app.api.router import api_router
 from app.configs.config import settings
@@ -13,5 +12,5 @@ if str(PROJECT_ROOT) not in sys.path:
     
 load_dotenv(PROJECT_ROOT / ".env")
 
-app = FastAPI(title=settings.app_name)
+app = FastAPI(title="TaskQuest-API")
 app.include_router(api_router, prefix="/api/v1")
