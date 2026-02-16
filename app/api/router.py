@@ -1,12 +1,10 @@
 from fastapi import APIRouter, status, HTTPException, Depends
 from pydantic import BaseModel
 from app.deps.deps import verify_token
-import google.generativeai as genai
 import os
+from app.ai.llm.client import aiClient
 
 api_router = APIRouter()
-genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
-model = genai.GenerativeModel("gemini-3-flash-preview")
 class CreateMessageRequest(BaseModel) :
     username : str
     message : str
@@ -17,8 +15,8 @@ async def tes(request: CreateMessageRequest,  _: bool = Depends(verify_token)):
         raise HTTPException(status_code=400, detail="Message tidak boleh kosong")
     
     try :
-        res = await model.generate_content_async(request.message)
-        return {"message": "Yes", "data": res.text}
+        res = await aiClient.generate(request.message)
+        return {"message": "Yes", "data": res}
     except Exception as e :
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
 
