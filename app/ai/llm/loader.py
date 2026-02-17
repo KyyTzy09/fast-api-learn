@@ -1,11 +1,11 @@
 from pathlib import Path
 from functools import lru_cache
 
-ROOT_PROMPT_DIR = Path(__file__).parent
+BASE_DIR = Path(__file__).resolve().parents[1] / "prompts"
 
 @lru_cache(maxsize=32)
 def load_prompt(filename: str) -> str:
-    path = ROOT_PROMPT_DIR / filename
+    path = BASE_DIR / filename
     
     if not path.exists():
         raise FileNotFoundError(f"Root Prompt not found {filename}")

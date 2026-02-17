@@ -1,5 +1,5 @@
 import google.generativeai as genai
-from app.ai.llm.root_prompts.loader import load_prompt
+from app.ai.llm.loader import load_prompt
 
 
 class GeminiClient:
