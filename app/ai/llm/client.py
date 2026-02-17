@@ -34,9 +34,9 @@ class GeminiClient:
             if not res or not res.text:
                 raise RuntimeError("Empty response from gemini")
             return res.text.strip()
-        
-        except Exception:
-            pass
+
+        except Exception as e:
+            print("Gemini error: ", e)
 
         res = await self.fallback.generate_content_async(prompt)
         if not res.text:
