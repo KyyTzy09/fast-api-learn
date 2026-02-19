@@ -8,16 +8,16 @@ from app.deps.deps import verify_token
 
 reflection_router = APIRouter()
 
-class Quest:
-    questId: str
-    isSuccess: bool
+class Quest(BaseModel):
+    quest_id: str
+    issuccess: bool
 
-class QuestHistory:
+class QuestHistory(BaseModel):
     folder: str
     quests: List[Quest]
 
 class CreateReflectionRequest(BaseModel):
-    reflection: str
+    reflection: Dict[str, str]
     quest_history: Dict[str, List[QuestHistory]]
 
 
