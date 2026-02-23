@@ -11,6 +11,7 @@ class QuestFolderRequestModel(BaseModel):
     folder: str
     isSuccess: bool
     deadline: datetime
+    estimatedMin: int
     completedAt: Optional[datetime]
     reflections: List[Optional[QuestReflectionModel]]
 
