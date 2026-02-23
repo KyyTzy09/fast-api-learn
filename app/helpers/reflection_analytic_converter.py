@@ -6,6 +6,29 @@ from app.models.reflection_model import ReflectionType
 
 
 class ReflectionAnalyticConverter:
+    def folderStatCounter(self, data: List[QuestFolderRequestModel]):
+        folderStats = {}
+
+        for q in data:
+            folderName = getattr(q, "folder", "Unknown")
+
+            if folderName not in folderStats:
+                folderStats[folderName] = {"completed": 0, "failed": 0}
+
+            if q.isSuccess:
+                folderStats[folderName]["completed"] += 1
+            else:
+                folderStats[folderName]["failed"] += 1
+
+        return [
+            {
+                "folder": name,
+                "completed": stat["completed"],
+                "failed": stat["failed"],
+            }
+            for name, stat in folderStats.items()
+        ]
+
     # Rate Keberhasilan / kegagalan
     def calculateRate(self, part, total):
         if total == 0:
@@ -28,6 +51,15 @@ class ReflectionAnalyticConverter:
         total = len(data)
         completed = sum(1 for q in data if q.isSuccess)
         failed = total - completed
+        folderStats = self.folderStatCounter(data)
+        dominantFailedFolder = None
+        dominantSuccessFolder = None
+
+        if folderStats:
+            dominantFailedFolder = max(folderStats, key=lambda x: x["failed"])["folder"]
+            dominantSuccessFolder = max(folderStats, key=lambda x: x["completed"])[
+                "folder"
+            ]
 
         hourCounter = Counter()
         for q in data:
@@ -74,16 +106,9 @@ class ReflectionAnalyticConverter:
             "largeQuestFailureRate": largeFailureRate,
             "topSuccessKeywords": topSuccessReasons,
             "topFailureKeywords": topFailureReasons,
+            "dominantSuccessFolder": dominantSuccessFolder,
+            "dominantFailedFolder": dominantFailedFolder,
+            "folderStats": folderStats,
         }
 
         return weeklyAnalysist
-
-
-#  {
-#         "totalQuest": total,
-#         "completed": completed,
-#         "failed": failed,
-#         "mostProductiveHour": most_productive_hour,
-#         "largeQuestFailureRate": large_failure_rate,
-#         "topFailureKeywords": top_reasons
-#     }

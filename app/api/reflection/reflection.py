@@ -22,13 +22,13 @@ async def create_reflection(
     converter = ReflectionAnalyticConverter()
     try:
         converted_result = converter.convert(data=request.histories)
-        prompt_tmplt = load_prompt("user_reflection.prompt")
-        prompt = prompt_tmplt.replace(
-            "{{payload_json}}",
-            json.dumps(converted_result, ensure_ascii=False, indent=2),
-        )
+        # prompt_tmplt = load_prompt("user_reflection.prompt")
+        # prompt = prompt_tmplt.replace(
+        #     "{{payload_json}}",
+        #     json.dumps(converted_result, ensure_ascii=False, indent=2),
+        # )
 
-        response = await model.generate(prompt)
-        return {"message": "Reflection generated", "data": response}
+        # response = await model.generate(prompt)
+        return {"message": "Reflection generated", "data": converted_result}
     except Exception as e:
         raise HTTPException(status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
